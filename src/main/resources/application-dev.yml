@@ -3,8 +3,8 @@ spring:
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://knowknowgram-dev.c9umauacedkq.ap-northeast-2.rds.amazonaws.com:3306/knowknowgram?serverTimezone=UTC
-        username: "admin"
-        password: "12345678"
+        username: admin
+        password: 12345678
     
     # jpa 설정
     jpa:
