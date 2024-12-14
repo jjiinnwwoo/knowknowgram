@@ -1,0 +1,18 @@
+# dev setting
+spring:
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://knowknowgram-dev.c9umauacedkq.ap-northeast-2.rds.amazonaws.com:3306/knowknowgram?serverTimezone=UTC
+        username: "admin"
+        password: "12345678"
+    
+    # jpa 설정
+    jpa:
+        database-platform: org.hibernate.dialect.MySQLDialect
+        hibernate:
+            ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate(실서버)))
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+                show-sql: true        # 쿼리 로그 출력
+                format-sql: true      # 쿼리 로그 포맷 (정렬)

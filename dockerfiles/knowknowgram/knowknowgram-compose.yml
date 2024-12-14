@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - knowknowgram
+
+  backend:
+    container_name: backend
+    image: realcow123/knowknowgram:latest
+    ports:
+      - "8080:8080"
+    user: "1000:1000"
+    networks:
+      - knowknowgram
+    volumes:
+      - /home/ec2-user/logs:/logs
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+networks:
+  knowknowgram:

@@ -1,0 +1,21 @@
+# common setting
+spring:
+    profiles:
+        active: dev
+
+    application:
+        name: knowknowgram
+
+    # data:
+        # redis:
+        #     host: localhost
+        #     port: 6379
+        # mvc:
+        #     converters:
+        #         preferred-json-mapper: gson
+# jasypt:
+#     encryptor:
+#         bean: jasyptStringEncryptor
+        
+server:
+    port: 8080
