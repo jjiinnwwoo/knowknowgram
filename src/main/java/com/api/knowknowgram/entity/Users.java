@@ -7,12 +7,13 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "users")
 public class Users implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -43,7 +44,10 @@ public class Users implements Serializable {
 
     @Column(name = "delete_date", nullable = true)
     @JsonProperty("delete_date")
-    private LocalDateTime deleteeDate;
+    private LocalDateTime deleteDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameInfo> gameInfoList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -66,12 +70,11 @@ public class Users implements Serializable {
             "id=" + id +
             ", nickname='" + nickname + '\'' +
             ", email='" + email + '\'' +
-            ", password='" + password + '\'' + // password는 @JsonIgnore 어노테이션으로 직렬화에서 제외되므로 실제로는 포함되지 않음
             ", photo='" + photo + '\'' +
             ", point=" + point +
             ", createDate=" + createDate +
             ", updateDate=" + updateDate +
-            ", deleteeDate=" + deleteeDate +
+            ", deleteDate=" + deleteDate +
             '}';
     }
 
