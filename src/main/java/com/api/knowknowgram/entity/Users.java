@@ -1,4 +1,4 @@
-package com.api.knowknowgram.domain;
+package com.api.knowknowgram.entity;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
