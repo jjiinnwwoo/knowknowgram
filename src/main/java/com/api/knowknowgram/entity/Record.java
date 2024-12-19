@@ -5,10 +5,17 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import com.api.knowknowgram.common.base.BaseEntity;
+
 @Data
 @Entity
 @Table(name = "record")
-public class Record {
+@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("delete_date IS NULL")
+public class Record extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,25 +29,8 @@ public class Record {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    @Column(name = "create_date", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createDate;
-
-    @Column(name = "update_date", nullable = true)
-    private LocalDateTime updateDate;
-
-    @Column(name = "delete_date", nullable = true)
-    private LocalDateTime deleteDate;
-
     @Column(nullable = false)
     private Boolean complete = false;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Users user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "logic_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Logic logic;
 
     @Override
     public boolean equals(Object o) {
@@ -62,10 +52,8 @@ public class Record {
                 ", userId=" + userId +
                 ", logicId=" + logicId +
                 ", time=" + time +
-                ", createDate=" + createDate +
-                ", updateDate=" + updateDate +
-                ", deleteDate=" + deleteDate +
                 ", complete=" + complete +
+                ", " + super.toString() +
                 '}';
     }
 }

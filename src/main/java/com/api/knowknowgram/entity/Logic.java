@@ -1,24 +1,31 @@
 package com.api.knowknowgram.entity;
 
 import jakarta.persistence.*;
+
+import com.api.knowknowgram.common.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Data
 @Entity
 @Table(name = "logic")
-public class Logic {
+@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("delete_date IS NULL")
+public class Logic extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer rows;
+    @Column(name = "rows_num", nullable = false)
+    @JsonProperty("rows_num")
+    private Integer rowsNum;
 
-    @Column(nullable = false)
-    private Integer cols;
+    @Column(name = "cols_num", nullable = false)
+    @JsonProperty("cols_num")
+    private Integer colsNum;
 
     @Column(name = "row_hints", nullable = false, columnDefinition = "JSONB")
     @JsonProperty("row_hints")
@@ -31,20 +38,8 @@ public class Logic {
     @Column(nullable = false, columnDefinition = "JSONB")
     private String solution;
 
-    @Column(name = "create_date", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    @JsonProperty("create_date")
-    private LocalDateTime createDate;
-
-    @Column(name = "update_date", nullable = true)
-    @JsonProperty("update_date")
-    private LocalDateTime updateDate;
-
-    @Column(name = "delete_date", nullable = true)
-    @JsonProperty("delete_date")
-    private LocalDateTime deleteDate;
-
-    @OneToOne(mappedBy = "logic", fetch = FetchType.LAZY)
-    private GameInfo gameInfo;
+    // @OneToOne(mappedBy = "logic", fetch = FetchType.LAZY)
+    // private GameInfo gameInfo;
 
     @Override
     public boolean equals(Object o) {
@@ -63,15 +58,12 @@ public class Logic {
     public String toString() {
         return "Logic{" +
                 "id=" + id +
-                ", rows=" + rows +
-                ", cols=" + cols +
-                ", rowHints='" + rowHints + '\'' +
-                ", colHints='" + colHints + '\'' +
-                ", solution='" + solution + '\'' +
-                ", createDate=" + createDate +
-                ", updateDate=" + updateDate +
-                ", deleteDate=" + deleteDate +
-                ", gameInfo=" + gameInfo +
+                ", rowsNum=" + rowsNum +
+                ", colsNum=" + colsNum +
+                ", rowHints='" + rowHints +
+                ", colHints='" + colHints +
+                ", solution='" + solution +
+                ", " + super.toString() +
                 '}';
     }
 }

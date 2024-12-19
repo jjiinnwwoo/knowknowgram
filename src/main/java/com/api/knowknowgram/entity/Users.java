@@ -1,19 +1,23 @@
 package com.api.knowknowgram.entity;
 
 import jakarta.persistence.*;
+
+import com.api.knowknowgram.common.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Data
 @Entity
 @Table(name = "users")
-public class Users implements Serializable {
+@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("delete_date IS NULL")
+public class Users extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -34,21 +38,6 @@ public class Users implements Serializable {
     @Column(nullable = true, columnDefinition = "int default 0")
     private Integer point;
 
-    @Column(name = "create_date", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    @JsonProperty("create_date")
-    private LocalDateTime createDate;
-
-    @Column(name = "update_date", nullable = true)
-    @JsonProperty("update_date")
-    private LocalDateTime updateDate;
-
-    @Column(name = "delete_date", nullable = true)
-    @JsonProperty("delete_date")
-    private LocalDateTime deleteDate;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GameInfo> gameInfoList = new ArrayList<>();
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,13 +57,11 @@ public class Users implements Serializable {
     public String toString() {
         return "User{" +
             "id=" + id +
-            ", nickname='" + nickname + '\'' +
-            ", email='" + email + '\'' +
-            ", photo='" + photo + '\'' +
+            ", nickname='" + nickname +
+            ", email='" + email +
+            ", photo='" + photo +
             ", point=" + point +
-            ", createDate=" + createDate +
-            ", updateDate=" + updateDate +
-            ", deleteDate=" + deleteDate +
+            ", " + super.toString() +
             '}';
     }
 
@@ -83,7 +70,7 @@ public class Users implements Serializable {
      */
     public void updateNickname(String nickname) {
         this.nickname = nickname;
-        this.updateDate = LocalDateTime.now();
+        super.setUpdateDate(LocalDateTime.now());
     }
 
     /**
@@ -91,7 +78,7 @@ public class Users implements Serializable {
      */
     public void increasePoint(Integer point) {
         this.point += point;
-        this.updateDate = LocalDateTime.now();
+        super.setUpdateDate(LocalDateTime.now());
     }
 
     /**
@@ -99,7 +86,7 @@ public class Users implements Serializable {
      */
     public void decreasePoint(Integer point) {
         this.point -= point;
-        this.updateDate = LocalDateTime.now();
+        super.setUpdateDate(LocalDateTime.now());
     }
 
     /**
@@ -107,6 +94,6 @@ public class Users implements Serializable {
      */
     public void updatePhoto(String photo) {
         this.photo = photo;
-        this.updateDate = LocalDateTime.now();
+        super.setUpdateDate(LocalDateTime.now());
     }
 }

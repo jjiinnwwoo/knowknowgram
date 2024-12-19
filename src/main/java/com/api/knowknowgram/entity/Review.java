@@ -5,10 +5,17 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import com.api.knowknowgram.common.base.BaseEntity;
+
 @Data
 @Entity
 @Table(name = "review")
-public class Review {
+@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("delete_date IS NULL")
+public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,23 +28,6 @@ public class Review {
 
     @Column(nullable = false, length = 300)
     private String content;
-
-    @Column(name = "create_date", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createDate;
-
-    @Column(name = "update_date", nullable = true)
-    private LocalDateTime updateDate;
-
-    @Column(name = "delete_date", nullable = true)
-    private LocalDateTime deleteDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Users user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "logic_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Logic logic;
 
     @Override
     public boolean equals(Object o) {
@@ -58,10 +48,8 @@ public class Review {
                 "id=" + id +
                 ", userId=" + userId +
                 ", logicId=" + logicId +
-                ", content='" + content + '\'' +
-                ", createDate=" + createDate +
-                ", updateDate=" + updateDate +
-                ", deleteDate=" + deleteDate +
+                ", content='" + content +
+                ", " + super.toString() +
                 '}';
     }
 }

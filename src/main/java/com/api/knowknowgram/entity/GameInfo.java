@@ -5,10 +5,17 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import com.api.knowknowgram.common.base.BaseEntity;
+
 @Data
 @Entity
 @Table(name = "game_info")
-public class GameInfo {
+@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("delete_date IS NULL")
+public class GameInfo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,31 +29,14 @@ public class GameInfo {
     @Column(nullable = false, length = 50)
     private String difficulty;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer like;
+    @Column(name = "like_count", nullable = false, columnDefinition = "int default 0")
+    private Integer likeCount;
 
     @Column(nullable = false, length = 255)
     private String name;
 
     @Column(name = "user_count", nullable = false, columnDefinition = "int default 0")
     private Integer userCount;
-
-    @Column(name = "create_date", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createDate;
-
-    @Column(name = "update_date", nullable = true)
-    private LocalDateTime updateDate;
-
-    @Column(name = "delete_date", nullable = true)
-    private LocalDateTime deleteDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Users user;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "logic_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Logic logic;
 
     @Override
     public boolean equals(Object o) {
@@ -65,16 +55,12 @@ public class GameInfo {
     public String toString() {
         return "GameInfo{" +
                 "id=" + id +
-                ", user=" + user +
                 ", logicId=" + logicId +
-                ", difficulty='" + difficulty + '\'' +
-                ", like=" + like +
-                ", name='" + name + '\'' +
-                ", userCount=" + userCount +
-                ", createDate=" + createDate +
-                ", updateDate=" + updateDate +
-                ", deleteDate=" + deleteDate +
-                ", logic=" + logic +
+                ", difficulty='" + difficulty +
+                ", likeCount=" + likeCount +
+                ", name='" + name +
+                ", userCount=" + userCount +                 
+                ", " + super.toString() +               
                 '}';
     }
 }
