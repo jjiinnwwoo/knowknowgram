@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.api.knowknowgram.common.util.Helper;
+import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.dto.LogicDto;
 import com.api.knowknowgram.entity.Logic;
 import com.api.knowknowgram.repository.LogicRepository;
@@ -22,7 +23,9 @@ public class LogicServiceImpl implements LogicService {
     @Override
     public List<LogicDto> getAllLogic() {
         List<Logic> logicList = logicRepository.findAll();
-        Helper.logInfo(logicList.toString());
+        
+        Helper.dataLog(LogType.DEV, logicList);
+        
         return logicList.stream()
                 .map(logic -> new LogicDto(
                         logic.getId(),
