@@ -31,8 +31,9 @@ public class LogicController {
     @GetMapping
     @Operation(summary = "전체 로직 조회", description = "모든 문제를 조회합니다.")
     @CommonApiResponses
-    public List<LogicDto> getAllLogic() {
-        return logicService.getAllLogic();
+    public JsonResponse getAllLogic() {
+        List<LogicDto> logicList = logicService.getAllLogic();
+        return JsonResponse.data(logicList);
     }
 
     // 특정 로직 조회
