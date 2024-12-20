@@ -11,7 +11,7 @@ public class Helper {
     private static final Logger apiLogger = LoggerFactory.getLogger("com.api.knowknowgram.api");
     private static final Logger dataLogger = LoggerFactory.getLogger("com.api.knowknowgram.data");
 
-        public static void apiLog(LogType type, String message) {
+    public static void apiLog(LogType type, String message) {
 
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
