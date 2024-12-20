@@ -8,6 +8,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -20,7 +23,7 @@ import org.hibernate.annotations.SQLRestriction;
 public class Users extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String nickname;
@@ -37,6 +40,10 @@ public class Users extends BaseEntity implements Serializable {
 
     @Column(nullable = true, columnDefinition = "int default 0")
     private Integer point;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Override
     public boolean equals(Object o) {

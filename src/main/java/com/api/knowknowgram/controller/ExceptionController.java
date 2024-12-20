@@ -3,6 +3,7 @@ package com.api.knowknowgram.controller;
 import com.api.knowknowgram.common.exception.LimitException;
 import com.api.knowknowgram.common.exception.NotFoundException;
 import com.api.knowknowgram.common.exception.ServiceException;
+import com.api.knowknowgram.common.exception.TokenRefreshException;
 import com.api.knowknowgram.common.response.JsonResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -95,10 +96,9 @@ public class ExceptionController {
         return JsonResponse.error("잠시 후 다시 시도해주세요.", 429);
     }
 
-    // Amazon S3 관련 예외 처리
-    // @ExceptionHandler(AmazonS3Exception.class)
-    // public JsonResponse handleAmazonS3Exception(AmazonS3Exception e) {
-    //     log.error("S3 에러 발생: {}", e.getMessage());
-    //     return JsonResponse.error("스토리지 설정이 잘못되었거나 접근할 수 없습니다.", 500);
-    // }
+    // 인증 예외 처리
+    @ExceptionHandler(TokenRefreshException.class)
+    public JsonResponse handleLimitException(TokenRefreshException e) {
+        return JsonResponse.error("토큰이 만료되었습니다.", 401);
+    }
 }

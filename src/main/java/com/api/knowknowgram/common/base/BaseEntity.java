@@ -2,6 +2,8 @@ package com.api.knowknowgram.common.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
@@ -19,6 +21,13 @@ public abstract class BaseEntity {
     @Column(name = "delete_date", nullable = true)
     @JsonProperty("delete_date")
     private LocalDateTime deleteDate;    
+
+    @PrePersist
+    public void prePersist() {
+        if (createDate == null) {
+            createDate = LocalDateTime.now();
+        }
+    }
 
     public LocalDateTime getCreateDate() {
         return createDate;
