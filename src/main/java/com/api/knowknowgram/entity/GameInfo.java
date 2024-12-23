@@ -3,19 +3,21 @@ package com.api.knowknowgram.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.api.knowknowgram.common.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
 @Entity
 @Table(name = "game_info")
-@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE game_info SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("delete_date IS NULL")
-public class GameInfo extends BaseEntity {
+public class GameInfo extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -37,6 +39,11 @@ public class GameInfo extends BaseEntity {
 
     @Column(name = "user_count", nullable = false, columnDefinition = "int default 0")
     private Integer userCount;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "logic_id", insertable = false, updatable = false)
+    @JsonBackReference
+    private Logic logic;
 
     @Override
     public boolean equals(Object o) {

@@ -1,12 +1,14 @@
 package com.api.knowknowgram.entity;
 
+import java.io.Serializable;
+
 import com.api.knowknowgram.common.enums.ERole;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
