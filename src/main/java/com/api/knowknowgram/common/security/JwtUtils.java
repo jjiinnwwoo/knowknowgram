@@ -21,7 +21,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtils { 
     private String jwtSecret = System.getenv("JWT_SECRET");
-    private int jwtExpirationMs = Integer.parseInt(System.getenv("JWT_EXPIRATION_MS"));
+    private Long jwtExpirationMs = Long.parseLong(System.getenv("JWT_EXPIRATION_MS"));
     private String jwtCookie = System.getenv("JWT_COOKIE_NAME");
     private String jwtRefreshCookie = System.getenv("JWT_REFRESH_COOKIE_NAME");
 
