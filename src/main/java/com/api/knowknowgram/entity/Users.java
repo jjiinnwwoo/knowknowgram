@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 
 import com.api.knowknowgram.common.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -18,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Data
 @Entity
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE users SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("delete_date IS NULL")
 public class Users extends BaseEntity implements Serializable {
     @Id
@@ -44,6 +44,10 @@ public class Users extends BaseEntity implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Record> records;
 
     @Override
     public boolean equals(Object o) {

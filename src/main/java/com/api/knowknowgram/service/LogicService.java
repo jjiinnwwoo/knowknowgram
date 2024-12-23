@@ -2,10 +2,13 @@ package com.api.knowknowgram.service;
 
 import java.util.List;
 
-import com.api.knowknowgram.dto.LogicDto;
+import org.springframework.data.domain.Pageable;
+
+import com.api.knowknowgram.common.enums.FilterType;
+import com.api.knowknowgram.payload.response.LogicResponse;
 
 public interface LogicService {
-    List<LogicDto> getAllLogic();
+    List<LogicResponse> getLogic(FilterType filterType, int rowsNum, int colsNum, Pageable pageable);
 
     // LogicDto getLogicById(Long id);
 

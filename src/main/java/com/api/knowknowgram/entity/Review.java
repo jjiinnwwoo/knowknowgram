@@ -3,6 +3,7 @@ package com.api.knowknowgram.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -13,9 +14,9 @@ import com.api.knowknowgram.common.base.BaseEntity;
 @Data
 @Entity
 @Table(name = "review")
-@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE review SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("delete_date IS NULL")
-public class Review extends BaseEntity {
+public class Review extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

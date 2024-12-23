@@ -3,31 +3,37 @@ package com.api.knowknowgram.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.api.knowknowgram.common.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
 @Entity
 @Table(name = "record")
-@SQLDelete(sql = "UPDATE category SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE record SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("delete_date IS NULL")
-public class Record extends BaseEntity {
+public class Record extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private Users user;
 
-    @Column(name = "logic_id", nullable = false)
-    private Integer logicId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "logic_id", nullable = false)
+    @JsonBackReference
+    private Logic logic;
 
     @Column(nullable = false)
-    private LocalDateTime time;
+    private Long time;
 
     @Column(nullable = false)
     private Boolean complete = false;
@@ -49,8 +55,8 @@ public class Record extends BaseEntity {
     public String toString() {
         return "Record{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", logicId=" + logicId +
+                ", user=" + user.toString() +
+                ", logic=" + logic.toString() +
                 ", time=" + time +
                 ", complete=" + complete +
                 ", " + super.toString() +
