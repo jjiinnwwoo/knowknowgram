@@ -16,7 +16,7 @@ import com.api.knowknowgram.repository.UserRepository;
 
 @Service
 public class RefreshTokenService {
-    private Long refreshTokenDurationMs = Long.parseLong(System.getenv("JWT_REFRESH_EXPIRATION_MS"));
+    private Long refreshTokenDurationMs = 86400000L;
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
