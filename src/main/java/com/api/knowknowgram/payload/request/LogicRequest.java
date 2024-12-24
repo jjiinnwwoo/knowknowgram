@@ -20,7 +20,7 @@ public class LogicRequest {
     @Schema(description = "열 (GRID_SIZE 조회 시)", example = "10", required = false)
     private int colsNum = 0;
 
-    @Schema(description = "조회 필터", example = "ALL / POPULAR / CREATED_DATE / GRID_SIZE", required = true)
+    @Schema(description = "ALL(전체) / POPULAR(인기순) / CREATED_DATE(날짜순) / GRID_SIZE(문제 사이즈)", example = "ALL", required = true)
     @NotNull(message = "FilterType is required.")
     private FilterType filterType;
 }

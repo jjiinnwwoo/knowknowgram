@@ -40,7 +40,7 @@ public class LogicController {
     }
     
     @GetMapping
-    @Operation(summary = "로직 조회", description = "로직을 조회합니다.")
+    @Operation(summary = "로직 조회", description = "전체 / 필터 조회")
     @CommonApiResponses
     public JsonResponse getLogic(
         @Valid LogicRequest logicRequest, 
@@ -59,25 +59,26 @@ public class LogicController {
         return JsonResponse.data(logicList);
     }
 
-    // 특정 로직 조회
-    // @GetMapping("/{id}")
-    // @Operation(summary = "특정 로직 조회", description = "ID를 기반으로 특정 문제를 조회합니다.")
+    @GetMapping("/{id}")
+    @Operation(summary = "특정 로직 조회", description = "logic id로 특정 문제 조회")
+    @CommonApiResponses
+    public JsonResponse getLogicById(@PathVariable Long id) {
+        List<LogicResponse> logicList = logicService.getLogicById(id);
+
+        return JsonResponse.data(logicList);
+    }
+
+    // @PostMapping
+    // @Operation(summary = "로직 생성", description = "로직을 생성합니다.")
     // @CommonApiResponses
-    // public LogicDto getLogicById(@PathVariable Long id) {
-    //     return List<LogicDto>();
+    // public JsonResponse createLogic(@RequestBody LogicDto logicDto) {
+    //     return JsonResponse.success();
     // }
 
-    @PostMapping
-    @Operation(summary = "로직 생성", description = "로직을 생성합니다.")
-    @CommonApiResponses
-    public JsonResponse createLogic(@RequestBody LogicDto logicDto) {
-        return JsonResponse.success();
-    }
-
-    @DeleteMapping
-    @Operation(summary = "로직 삭제", description = "로직을 삭제합니다.")
-    @CommonApiResponses
-    public JsonResponse deleteLogic(@PathVariable Long id) {
-        return JsonResponse.success();
-    }
+    // @DeleteMapping
+    // @Operation(summary = "로직 삭제", description = "로직을 삭제합니다.")
+    // @CommonApiResponses
+    // public JsonResponse deleteLogic(@PathVariable Long id) {
+    //     return JsonResponse.success();
+    // }
 }

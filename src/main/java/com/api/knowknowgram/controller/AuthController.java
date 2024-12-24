@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.knowknowgram.common.annotation.CommonApiResponses;
 import com.api.knowknowgram.common.exception.TokenRefreshException;
 import com.api.knowknowgram.common.response.JsonResponse;
 import com.api.knowknowgram.common.security.JwtUtils;
@@ -25,6 +26,8 @@ import com.api.knowknowgram.entity.RefreshToken;
 import com.api.knowknowgram.payload.request.LoginRequest;
 import com.api.knowknowgram.repository.UserRepository;
 import com.api.knowknowgram.service.RefreshTokenService;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -45,6 +48,8 @@ public class AuthController {
     RefreshTokenService refreshTokenService;
 
     @PostMapping("/signin")
+    @Operation(summary = "로그인", description = "")
+    @CommonApiResponses
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager
             .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -66,6 +71,8 @@ public class AuthController {
     }
 
     @PostMapping("/refreshtoken")
+    @Operation(summary = "토큰 재발행", description = "")
+    @CommonApiResponses
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
         String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
         

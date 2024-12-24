@@ -9,7 +9,7 @@ import com.api.knowknowgram.entity.Record;
 
 @Data
 public class LogicResponse {
-    private Integer id;
+    private Long id;
     private Integer rowsNum;
     private Integer colsNum;
     private String rowHints;
@@ -19,7 +19,7 @@ public class LogicResponse {
     private GameInfo gameInfo;
     private Record record;
 
-    public LogicResponse(Integer id, Integer rowsNum, Integer colsNum, String rowHints, String colHints, String solution, LocalDateTime createDate, GameInfo gameInfo, Record record) {
+    public LogicResponse(Long id, Integer rowsNum, Integer colsNum, String rowHints, String colHints, String solution, LocalDateTime createDate, GameInfo gameInfo, Record record) {
         this.id = id;
         this.rowsNum = rowsNum;
         this.colsNum = colsNum;

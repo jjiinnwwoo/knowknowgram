@@ -11,12 +11,4 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 public class UserController {
-
-
-    @GetMapping("/hello")
-    @Operation(summary = "샘플 api", description = "샘클샘플")
-    @CommonApiResponses
-    public String hello() {
-        return "hello";
-    }
 }

@@ -64,4 +64,25 @@ public class LogicServiceImpl implements LogicService {
                 ))
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public List<LogicResponse> getLogicById(Long logicId) {
+        List<Logic> logicList = logicRepository.findById(logicId);
+
+        
+
+        return logicList.stream()
+                .map(logic -> new LogicResponse(
+                        logic.getId(),
+                        logic.getRowsNum(),
+                        logic.getColsNum(),
+                        logic.getRowHints(),
+                        logic.getColHints(),
+                        logic.getSolution(),
+                        logic.getCreateDate(),
+                        logic.getGameInfo(),
+                        logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
+                ))
+                .collect(Collectors.toList());
+    }
 }
