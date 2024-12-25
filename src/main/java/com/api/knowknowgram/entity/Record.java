@@ -33,7 +33,7 @@ public class Record extends BaseEntity implements Serializable {
     private Logic logic;
 
     @Column(nullable = false)
-    private Long time;
+    private int time;
 
     @Column(nullable = false)
     private Boolean complete = false;
@@ -55,11 +55,12 @@ public class Record extends BaseEntity implements Serializable {
     public String toString() {
         return "Record{" +
                 "id=" + id +
-                ", user=" + user.toString() +
-                ", logic=" + logic.toString() +
+                ", userId=" + (user != null ? user.getId() : "null") +
+                ", logicId=" + (logic != null ? logic.getId() : "null") +
                 ", time=" + time +
                 ", complete=" + complete +
                 ", " + super.toString() +
                 '}';
     }
+    
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,8 @@ import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.dto.LogicDto;
 import com.api.knowknowgram.entity.Logic;
 import com.api.knowknowgram.payload.response.LogicResponse;
-import com.api.knowknowgram.repository.LogicRepository;
+import com.api.knowknowgram.payload.response.MyLogicResponse;
+import com.api.knowknowgram.repository.logic.LogicRepository;
 import com.api.knowknowgram.service.LogicService;
 
 @Service
@@ -47,9 +49,6 @@ public class LogicServiceImpl implements LogicService {
                 break;
         }
         
-        
-        Helper.dataLog(LogType.DEV, logicList);
-        
         return logicList.stream()
                 .map(logic -> new LogicResponse(
                         logic.getId(),
@@ -69,8 +68,6 @@ public class LogicServiceImpl implements LogicService {
     public List<LogicResponse> getLogicById(Long logicId) {
         List<Logic> logicList = logicRepository.findById(logicId);
 
-        
-
         return logicList.stream()
                 .map(logic -> new LogicResponse(
                         logic.getId(),
@@ -84,5 +81,14 @@ public class LogicServiceImpl implements LogicService {
                         logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<MyLogicResponse> getMyLogic(Pageable pageable) {
+        Long currentUserId = Helper.getCurrentUserId();
+
+        Helper.apiLog(LogType.DEV, currentUserId.toString());
+
+        return logicRepository.findAllByUserId(currentUserId, pageable);
     }
 }

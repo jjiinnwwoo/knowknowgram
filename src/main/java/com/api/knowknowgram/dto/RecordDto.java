@@ -11,13 +11,13 @@ public class RecordDto {
     private Long id;
     private Long userId;
     private Long logicId;
-    private Long time;
+    private int time;
     private String gameName;
     private String difficulty;
     private int likeCount;
     private LocalDateTime createDate;
 
-    public RecordDto(Long id, Long userId, Long logicId, Long time, String gameName, String difficulty, int likeCount, LocalDateTime createDate) {
+    public RecordDto(Long id, Long userId, Long logicId, int time, String gameName, String difficulty, int likeCount, LocalDateTime createDate) {
         this.id = id;
         this.userId = userId;
         this.logicId = logicId;

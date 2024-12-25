@@ -66,15 +66,17 @@ public class Users extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", nickname='" + nickname +
-            ", email='" + email +
-            ", photo='" + photo +
-            ", point=" + point +
-            ", " + super.toString() +
-            '}';
+        return "Users{" +
+                "id=" + id +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", photo='" + photo + '\'' +
+                ", point=" + point +
+                ", role=" + (role != null ? role.toString() : "null") +                
+                ", " + super.toString() +
+                '}';
     }
+    
 
     /**
      * 닉네임 변경

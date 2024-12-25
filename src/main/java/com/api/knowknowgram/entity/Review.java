@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.api.knowknowgram.common.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
 @Entity
@@ -21,11 +22,15 @@ public class Review extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private Users user;
 
-    @Column(name = "logic_id", nullable = false)
-    private Integer logicId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "logic_id", insertable = false, updatable = false)
+    @JsonBackReference
+    private Logic logic;
 
     @Column(nullable = false, length = 300)
     private String content;
@@ -47,10 +52,11 @@ public class Review extends BaseEntity implements Serializable {
     public String toString() {
         return "Review{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", logicId=" + logicId +
-                ", content='" + content +
+                ", userId=" + (user != null ? user.getId() : "null") +
+                ", logicId=" + (logic != null ? logic.getId() : "null") +
+                ", content='" + content + '\'' +
                 ", " + super.toString() +
                 '}';
     }
+    
 }

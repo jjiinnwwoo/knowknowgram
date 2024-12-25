@@ -9,7 +9,9 @@ import com.api.knowknowgram.common.util.Helper;
 import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.dto.LogicDto;
 import com.api.knowknowgram.payload.request.LogicRequest;
+import com.api.knowknowgram.payload.request.MyLogicRequest;
 import com.api.knowknowgram.payload.response.LogicResponse;
+import com.api.knowknowgram.payload.response.MyLogicResponse;
 import com.api.knowknowgram.service.LogicService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +20,7 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +46,7 @@ public class LogicController {
     @Operation(summary = "로직 조회", description = "전체 / 필터 조회")
     @CommonApiResponses
     public JsonResponse getLogic(
-        @Valid LogicRequest logicRequest, 
+        @Valid LogicRequest logicRequest,
         BindingResult bindingResult
         ) {
         if (bindingResult.hasErrors()) {            
@@ -64,6 +67,17 @@ public class LogicController {
     @CommonApiResponses
     public JsonResponse getLogicById(@PathVariable Long id) {
         List<LogicResponse> logicList = logicService.getLogicById(id);
+
+        return JsonResponse.data(logicList);
+    }
+
+    @GetMapping("/my")
+    @Operation(summary = "내 로직 전체 조회", description = "")
+    @CommonApiResponses
+    public JsonResponse getMyLogic(@Valid MyLogicRequest myLogicRequest) {
+        Pageable pageable = PageRequest.of(myLogicRequest.getPage(), myLogicRequest.getSize());
+        
+        Page<MyLogicResponse> logicList = logicService.getMyLogic(pageable);
 
         return JsonResponse.data(logicList);
     }

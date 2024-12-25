@@ -50,6 +50,10 @@ public class Logic extends BaseEntity implements Serializable {
     @JsonManagedReference
     private List<Record> records;
 
+    @OneToMany(mappedBy = "logic", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Review> reviews;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,10 +73,11 @@ public class Logic extends BaseEntity implements Serializable {
                 "id=" + id +
                 ", rowsNum=" + rowsNum +
                 ", colsNum=" + colsNum +
-                ", rowHints='" + rowHints +
-                ", colHints='" + colHints +
-                ", solution='" + solution +
+                ", rowHints='" + (rowHints != null ? rowHints : "null") + '\'' +
+                ", colHints='" + (colHints != null ? colHints : "null") + '\'' +
+                ", solution='" + (solution != null ? solution : "null") + '\'' +
                 ", " + super.toString() +
                 '}';
     }
+    
 }

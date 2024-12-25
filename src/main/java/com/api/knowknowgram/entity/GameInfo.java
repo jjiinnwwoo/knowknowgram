@@ -22,11 +22,10 @@ public class GameInfo extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
-
-    @Column(name = "logic_id", nullable = false)
-    private Integer logicId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private Users user;
 
     @Column(nullable = false, length = 50)
     private String difficulty;
@@ -62,12 +61,16 @@ public class GameInfo extends BaseEntity implements Serializable {
     public String toString() {
         return "GameInfo{" +
                 "id=" + id +
-                ", logicId=" + logicId +
-                ", difficulty='" + difficulty +
+                ", user=" + (user != null ? user.getId() : null) +
+                ", difficulty='" + difficulty + '\'' +
                 ", likeCount=" + likeCount +
-                ", name='" + name +
-                ", userCount=" + userCount +                 
-                ", " + super.toString() +               
+                ", name='" + name + '\'' +
+                ", userCount=" + userCount +
+                ", logicId=" + (logic != null ? logic.getId() : null) +
+                ", createDate=" + getCreateDate() +
+                ", updateDate=" + getUpdateDate() +
+                ", deleteDate=" + getDeleteDate() +
                 '}';
     }
+    
 }
