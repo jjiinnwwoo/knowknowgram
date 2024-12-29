@@ -2,7 +2,7 @@
 spring:
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://knowknowgram-dev.c9umauacedkq.ap-northeast-2.rds.amazonaws.com:3306/knowknowgram?serverTimezone=UTC
+        url: jdbc:mysql://knowknowgram-dev.c9umauacedkq.ap-northeast-2.rds.amazonaws.com:3306/knowknowgram?serverTimezone=Asia/Seoul
         username: admin
         password: 12345678
     
