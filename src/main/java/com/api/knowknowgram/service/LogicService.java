@@ -10,7 +10,7 @@ import com.api.knowknowgram.payload.response.LogicResponse;
 import com.api.knowknowgram.payload.response.MyLogicResponse;
 
 public interface LogicService {
-    List<LogicResponse> getLogic(FilterType filterType, int rowsNum, int colsNum, Pageable pageable);
-    List<LogicResponse> getLogicById(Long logicId);
+    Page<LogicResponse> getLogic(FilterType filterType, int rowsNum, int colsNum, Pageable pageable);
+    LogicResponse getLogicById(Long logicId);
     Page<MyLogicResponse> getMyLogic(Pageable pageable);
 }

@@ -57,7 +57,7 @@ public class LogicController {
 
         Pageable pageable = PageRequest.of(logicRequest.getPage(), logicRequest.getSize());
         
-        List<LogicResponse> logicList = logicService.getLogic(logicRequest.getFilterType(), logicRequest.getRowsNum(), logicRequest.getColsNum(), pageable);
+        Page<LogicResponse> logicList = logicService.getLogic(logicRequest.getFilterType(), logicRequest.getRowsNum(), logicRequest.getColsNum(), pageable);
 
         return JsonResponse.data(logicList);
     }
@@ -66,7 +66,7 @@ public class LogicController {
     @Operation(summary = "특정 로직 조회", description = "logic id로 특정 문제 조회")
     @CommonApiResponses
     public JsonResponse getLogicById(@PathVariable Long id) {
-        List<LogicResponse> logicList = logicService.getLogicById(id);
+        LogicResponse logicList = logicService.getLogicById(id);
 
         return JsonResponse.data(logicList);
     }

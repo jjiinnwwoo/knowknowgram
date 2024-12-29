@@ -27,60 +27,64 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
-    public List<LogicResponse> getLogic(FilterType filterType, int rowsNum, int colsNum, Pageable pageable) {
+    public Page<LogicResponse> getLogic(FilterType filterType, int rowsNum, int colsNum, Pageable pageable) {
         Long currentUserId = Helper.getCurrentUserId();
-        List<Logic> logicList = new ArrayList<>();
+        Page<Logic> logicPage;
 
         switch (filterType) {
             case ALL:
-                logicList = logicRepository.findAll();        
+                logicPage = logicRepository.findAll(pageable);
                 break;
             case POPULAR:
-                logicList = logicRepository.findAllByOrderByLikeCountDesc(currentUserId, pageable).getContent();
+                logicPage = logicRepository.findAllByOrderByLikeCountDesc(currentUserId, pageable);
                 break;
             case CREATED_DATE:
-                logicList = logicRepository.findAllByOrderByCreateDateDesc(currentUserId, pageable);
+                logicPage = logicRepository.findAllByOrderByCreateDateDesc(currentUserId, pageable); 
                 break;
             case GRID_SIZE:
-                logicList = logicRepository.findAllByRowsNumAndColsNum(currentUserId, rowsNum, colsNum, pageable);
-                break;        
+                logicPage = logicRepository.findAllByRowsNumAndColsNum(currentUserId, rowsNum, colsNum, pageable);
+                break;
             default:
-                logicList = logicRepository.findAll();
+                logicPage = logicRepository.findAll(pageable);
                 break;
         }
-        
-        return logicList.stream()
-                .map(logic -> new LogicResponse(
-                        logic.getId(),
-                        logic.getRowsNum(),
-                        logic.getColsNum(),
-                        logic.getRowHints(),
-                        logic.getColHints(),
-                        logic.getSolution(),
-                        logic.getCreateDate(),
-                        logic.getGameInfo(),
-                        logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
-                ))
-                .collect(Collectors.toList());
+
+        Page<LogicResponse> logicResponsePage = logicPage.map(logic -> new LogicResponse(
+            logic.getId(),
+            logic.getRowsNum(),
+            logic.getColsNum(),
+            logic.getRowHints(),
+            logic.getColHints(),
+            logic.getSolution(),
+            logic.getCreateDate(),
+            logic.getGameInfo(),
+            logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
+        ));
+
+        return logicResponsePage;
     }
+
     
     @Override
-    public List<LogicResponse> getLogicById(Long logicId) {
-        List<Logic> logicList = logicRepository.findById(logicId);
+    public LogicResponse getLogicById(Long logicId) {
+        Logic logic = logicRepository.findById(logicId)
+            .orElseGet(() -> {                             
+                return new Logic();
+            });
 
-        return logicList.stream()
-                .map(logic -> new LogicResponse(
-                        logic.getId(),
-                        logic.getRowsNum(),
-                        logic.getColsNum(),
-                        logic.getRowHints(),
-                        logic.getColHints(),
-                        logic.getSolution(),
-                        logic.getCreateDate(),
-                        logic.getGameInfo(),
-                        logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
-                ))
-                .collect(Collectors.toList());
+        LogicResponse logicResponse = new LogicResponse(
+            logic.getId(),
+            logic.getRowsNum(),
+            logic.getColsNum(),
+            logic.getRowHints(),
+            logic.getColHints(),
+            logic.getSolution(),
+            logic.getCreateDate(),
+            logic.getGameInfo(),
+            logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
+        );
+    
+        return logicResponse;
     }
 
     @Override

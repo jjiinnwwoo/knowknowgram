@@ -1,6 +1,7 @@
 package com.api.knowknowgram.repository.logic;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import com.api.knowknowgram.entity.Logic;
 @Repository
 public interface LogicRepository extends JpaRepository<Logic, Integer>, LogicRepositoryCustom {
         // 로직 ID로 찾기
-        List<Logic> findById(Long id);
+        Optional<Logic> findById(Long id);
         
         // 전체 조회 (인기순)
         @Query("SELECT l FROM Logic l JOIN FETCH l.gameInfo g " +
@@ -26,12 +27,12 @@ public interface LogicRepository extends JpaRepository<Logic, Integer>, LogicRep
         // 전체 조회 (등록일순)
         @Query("SELECT l FROM Logic l LEFT JOIN FETCH Record r ON r.logic.id = l.id AND r.user.id = :userId " +
                 "ORDER BY l.createDate DESC")
-        List<Logic> findAllByOrderByCreateDateDesc(@Param("userId") Long userId, Pageable pageable);
+        Page<Logic> findAllByOrderByCreateDateDesc(@Param("userId") Long userId, Pageable pageable);
 
         // 전체 조회 (칸수별 조회)
         @Query("SELECT l FROM Logic l LEFT JOIN FETCH Record r ON r.logic.id = l.id AND r.user.id = :userId " +
                 "WHERE l.rowsNum = :rowsNum AND l.colsNum = :colsNum")
-        List<Logic> findAllByRowsNumAndColsNum(@Param("userId") Long userId, @Param("rowsNum") int rowsNum, @Param("colsNum") int colsNum, Pageable pageable);
+        Page<Logic> findAllByRowsNumAndColsNum(@Param("userId") Long userId, @Param("rowsNum") int rowsNum, @Param("colsNum") int colsNum, Pageable pageable);
         
         @EntityGraph(attributePaths = {"records"})
         @Query("SELECT l FROM Logic l " +
