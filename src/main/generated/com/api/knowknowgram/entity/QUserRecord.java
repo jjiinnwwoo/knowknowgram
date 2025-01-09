@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QRecord is a Querydsl query type for Record
+ * QUserRecord is a Querydsl query type for UserRecord
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QRecord extends EntityPathBase<Record> {
+public class QUserRecord extends EntityPathBase<UserRecord> {
 
-    private static final long serialVersionUID = 441736700L;
+    private static final long serialVersionUID = 762192935L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QRecord record = new QRecord("record");
+    public static final QUserRecord userRecord = new QUserRecord("userRecord");
 
     public final com.api.knowknowgram.common.base.QBaseEntity _super = new com.api.knowknowgram.common.base.QBaseEntity(this);
 
@@ -43,23 +43,23 @@ public class QRecord extends EntityPathBase<Record> {
 
     public final QUsers user;
 
-    public QRecord(String variable) {
-        this(Record.class, forVariable(variable), INITS);
+    public QUserRecord(String variable) {
+        this(UserRecord.class, forVariable(variable), INITS);
     }
 
-    public QRecord(Path<? extends Record> path) {
+    public QUserRecord(Path<? extends UserRecord> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QRecord(PathMetadata metadata) {
+    public QUserRecord(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QRecord(PathMetadata metadata, PathInits inits) {
-        this(Record.class, metadata, inits);
+    public QUserRecord(PathMetadata metadata, PathInits inits) {
+        this(UserRecord.class, metadata, inits);
     }
 
-    public QRecord(Class<? extends Record> type, PathMetadata metadata, PathInits inits) {
+    public QUserRecord(Class<? extends UserRecord> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.logic = inits.isInitialized("logic") ? new QLogic(forProperty("logic"), inits.get("logic")) : null;
         this.user = inits.isInitialized("user") ? new QUsers(forProperty("user"), inits.get("user")) : null;

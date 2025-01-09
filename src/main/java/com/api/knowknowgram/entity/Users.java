@@ -47,7 +47,7 @@ public class Users extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Record> records;
+    private List<UserRecord> records;
 
     @Override
     public boolean equals(Object o) {

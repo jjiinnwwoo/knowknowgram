@@ -2,17 +2,17 @@ package com.api.knowknowgram.service;
 
 import org.springframework.stereotype.Service;
 
-import com.api.knowknowgram.repository.RecordRepository;
+import com.api.knowknowgram.repository.UserRecordRepository;
 
 @Service
 public class RecordService {
-    private final RecordRepository recordRepository;
+    private final UserRecordRepository UserRecordRepository;
 
-    public RecordService(RecordRepository recordRepository) {
-        this.recordRepository = recordRepository;
+    public RecordService(UserRecordRepository UserRecordRepository) {
+        this.UserRecordRepository = UserRecordRepository;
     }
 
     public Long getCompletedGamesCount(Long userId) {
-        return recordRepository.countCompletedGamesByUserId(userId);
+        return UserRecordRepository.countCompletedGamesByUserId(userId);
     }
 }

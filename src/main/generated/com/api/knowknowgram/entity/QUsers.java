@@ -42,7 +42,7 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
-    public final ListPath<Record, QRecord> records = this.<Record, QRecord>createList("records", Record.class, QRecord.class, PathInits.DIRECT2);
+    public final ListPath<UserRecord, QUserRecord> records = this.<UserRecord, QUserRecord>createList("records", UserRecord.class, QUserRecord.class, PathInits.DIRECT2);
 
     public final QRole role;
 

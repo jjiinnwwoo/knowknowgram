@@ -38,7 +38,7 @@ public class QLogic extends EntityPathBase<Logic> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<Record, QRecord> records = this.<Record, QRecord>createList("records", Record.class, QRecord.class, PathInits.DIRECT2);
+    public final ListPath<Likes, QLikes> likes = this.<Likes, QLikes>createList("likes", Likes.class, QLikes.class, PathInits.DIRECT2);
 
     public final ListPath<Review, QReview> reviews = this.<Review, QReview>createList("reviews", Review.class, QReview.class, PathInits.DIRECT2);
 
@@ -50,6 +50,8 @@ public class QLogic extends EntityPathBase<Logic> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
+
+    public final ListPath<UserRecord, QUserRecord> userRecords = this.<UserRecord, QUserRecord>createList("userRecords", UserRecord.class, QUserRecord.class, PathInits.DIRECT2);
 
     public QLogic(String variable) {
         this(Logic.class, forVariable(variable), INITS);

@@ -14,10 +14,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
 @Entity
-@Table(name = "record")
-@SQLDelete(sql = "UPDATE record SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "user_record")
+@SQLDelete(sql = "UPDATE user_record SET delete_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("delete_date IS NULL")
-public class Record extends BaseEntity implements Serializable {
+public class UserRecord extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,7 +42,7 @@ public class Record extends BaseEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Record record = (Record) o;
+        UserRecord record = (UserRecord) o;
         return id != null ? id.equals(record.id) : record.id == null;
     }
 

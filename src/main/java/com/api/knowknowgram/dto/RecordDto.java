@@ -1,6 +1,6 @@
 package com.api.knowknowgram.dto;
 
-import com.api.knowknowgram.entity.Record;
+import com.api.knowknowgram.entity.UserRecord;
 import com.api.knowknowgram.entity.GameInfo;
 import java.time.LocalDateTime;
 
@@ -28,7 +28,7 @@ public class RecordDto {
         this.createDate = createDate;
     }
 
-    public static RecordDto fromEntity(Record record) {        
+    public static RecordDto fromEntity(UserRecord record) {        
         GameInfo gameInfo = record.getLogic().getGameInfo(); // Record 엔티티에서 GameInfo 로직을 가져옵니다.
 
         return new RecordDto(

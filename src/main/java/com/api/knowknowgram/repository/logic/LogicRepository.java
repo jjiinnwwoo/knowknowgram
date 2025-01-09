@@ -19,23 +19,27 @@ public interface LogicRepository extends JpaRepository<Logic, Integer>, LogicRep
         Optional<Logic> findById(Long id);
         
         // 전체 조회 (인기순)
-        @Query("SELECT l FROM Logic l JOIN FETCH l.gameInfo g " +
-        "LEFT JOIN Record r ON r.logic.id = l.id AND r.user.id = :userId " +
-        "ORDER BY g.likeCount DESC")
+        @Query("SELECT l FROM Logic l JOIN l.gameInfo g " +
+                "LEFT JOIN UserRecord r ON r.logic.id = l.id AND r.user.id = :userId " +
+                "LEFT JOIN Likes li ON li.logic.id = l.id AND li.user.id = :userId " +
+                "ORDER BY g.likeCount DESC")
         Page<Logic> findAllByOrderByLikeCountDesc(@Param("userId") Long userId, Pageable pageable);
 
         // 전체 조회 (등록일순)
-        @Query("SELECT l FROM Logic l LEFT JOIN FETCH Record r ON r.logic.id = l.id AND r.user.id = :userId " +
+        @Query("SELECT DISTINCT l FROM Logic l " +
+                "LEFT JOIN l.userRecords r ON r.logic.id = l.id AND r.user.id = :userId " +
+                "LEFT JOIN l.likes li ON li.logic.id = l.id AND li.user.id = :userId " +
                 "ORDER BY l.createDate DESC")
         Page<Logic> findAllByOrderByCreateDateDesc(@Param("userId") Long userId, Pageable pageable);
 
         // 전체 조회 (칸수별 조회)
-        @Query("SELECT l FROM Logic l LEFT JOIN FETCH Record r ON r.logic.id = l.id AND r.user.id = :userId " +
+        @Query("SELECT l FROM Logic l LEFT JOIN UserRecord r ON r.logic.id = l.id AND r.user.id = :userId " +
+                "LEFT JOIN Likes li ON li.logic.id = l.id AND li.user.id = :userId " +
                 "WHERE l.rowsNum = :rowsNum AND l.colsNum = :colsNum")
         Page<Logic> findAllByRowsNumAndColsNum(@Param("userId") Long userId, @Param("rowsNum") int rowsNum, @Param("colsNum") int colsNum, Pageable pageable);
         
-        @EntityGraph(attributePaths = {"records"})
-        @Query("SELECT l FROM Logic l " +
-                "WHERE l.rowsNum = :rowsNum AND l.colsNum = :colsNum")
-        Page<Logic> findAllByRowsNumAndColsNum(@Param("rowsNum") int rowsNum, @Param("colsNum") int colsNum, Pageable pageable);
+        // @EntityGraph(attributePaths = {"userRecords"})
+        // @Query("SELECT l FROM Logic l " +
+        //         "WHERE l.rowsNum = :rowsNum AND l.colsNum = :colsNum")
+        // Page<Logic> findAllByRowsNumAndColsNum(@Param("rowsNum") int rowsNum, @Param("colsNum") int colsNum, Pageable pageable);
 }

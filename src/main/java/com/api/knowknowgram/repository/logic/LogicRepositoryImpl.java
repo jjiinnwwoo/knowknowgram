@@ -8,7 +8,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import com.api.knowknowgram.entity.QGameInfo;
 import com.api.knowknowgram.entity.QLogic;
-import com.api.knowknowgram.entity.QRecord;
+import com.api.knowknowgram.entity.QUserRecord;
 import com.api.knowknowgram.entity.QReview;
 import com.api.knowknowgram.payload.response.MyLogicResponse;
 import com.querydsl.core.types.Projections;
@@ -31,32 +31,32 @@ public class LogicRepositoryImpl implements LogicRepositoryCustom {
     public Page<MyLogicResponse> findAllByUserId(Long userId, Pageable pageable) {
         QLogic logic = QLogic.logic;
         QGameInfo gameInfo = QGameInfo.gameInfo;
-        QRecord record = QRecord.record;
+        QUserRecord userRecord = QUserRecord.userRecord;
         QReview review = QReview.review;
         
         List<MyLogicResponse> content = queryFactory
             .select(Projections.constructor(MyLogicResponse.class,
                 logic.id,
                 gameInfo.name,
-                record.id.countDistinct(),
+                userRecord.id.countDistinct(),
                 review.id.countDistinct(),                
                 new CaseBuilder()
-                    .when(record.id.count().eq(0L))
+                    .when(userRecord.id.count().eq(0L))
                     .then(0L)
                     .otherwise(
                         new CaseBuilder()
-                            .when(record.complete.isTrue())
+                            .when(userRecord.complete.isTrue())
                             .then(1L)
                             .otherwise(0L)
                             .sum()
                             .multiply(100L)
-                            .divide(record.id.count())
+                            .divide(userRecord.id.count())
                     )
                     .as("completionRate"),
                     Expressions.numberTemplate(Integer.class, "min({0})", 
                     new CaseBuilder()
-                        .when(record.complete.isTrue())
-                        .then(record.time)
+                        .when(userRecord.complete.isTrue())
+                        .then(userRecord.time)
                         .otherwise((Integer) null)
                 )
                 .as("shortestTime"),                
@@ -64,7 +64,7 @@ public class LogicRepositoryImpl implements LogicRepositoryCustom {
             ))
             .from(logic)
             .join(logic.gameInfo, gameInfo)
-            .leftJoin(logic.records, record)
+            .leftJoin(logic.userRecords, userRecord)
             .leftJoin(logic.reviews, review)
             .where(gameInfo.user.id.eq(userId))
             .groupBy(logic.id, gameInfo.name)

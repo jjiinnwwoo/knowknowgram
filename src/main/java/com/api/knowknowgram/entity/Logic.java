@@ -48,11 +48,15 @@ public class Logic extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "logic", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Record> records;
+    private List<UserRecord> userRecords;
 
     @OneToMany(mappedBy = "logic", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "logic", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Likes> likes;
 
     @Override
     public boolean equals(Object o) {
@@ -79,5 +83,4 @@ public class Logic extends BaseEntity implements Serializable {
                 ", " + super.toString() +
                 '}';
     }
-    
 }
