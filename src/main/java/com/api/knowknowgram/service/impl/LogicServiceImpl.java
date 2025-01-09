@@ -12,6 +12,7 @@ import com.api.knowknowgram.common.util.Helper;
 import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.entity.Logic;
 import com.api.knowknowgram.entity.UserRecord;
+import com.api.knowknowgram.payload.response.LogicDetailResponse;
 import com.api.knowknowgram.payload.response.LogicResponse;
 import com.api.knowknowgram.payload.response.MyLogicResponse;
 import com.api.knowknowgram.payload.response.PaginatedResponse;
@@ -50,14 +51,14 @@ public class LogicServiceImpl implements LogicService {
         }
 
         Page<LogicResponse> logicResponsePage = logicPage.map(logic -> {
-            boolean isLikes = logic.getLikes() != null && !logic.getLikes().isEmpty();                        
-            // boolean isComplete = logic.getRecords().isEmpty() ? false : logic.getRecords().get(0).getComplete();
+            boolean isLikes = logic.getLikes() != null && !logic.getLikes().isEmpty();                                    
             boolean isComplete = false;
             
             for (UserRecord record : logic.getUserRecords()) {
                 if (record.getUser() != null && record.getUser().getId().equals(currentUserId)) {
-                    isComplete = record.getComplete();  // 해당 record의 complete 값을 가져오기
-                    break;  // 첫 번째로 맞는 record를 찾으면 루프 종료
+                    isComplete = record.getComplete();
+
+                    break;
                 }
             }
         
@@ -75,26 +76,24 @@ public class LogicServiceImpl implements LogicService {
     
     
     // @Override
-    // public LogicResponse getLogicById(Long logicId) {
-    //     Logic logic = logicRepository.findById(logicId)
-    //         .orElseGet(() -> {                             
-    //             return new Logic();
-    //         });
+    public LogicDetailResponse getLogicById(Long logicId) {
+        Logic logic = logicRepository.findById(logicId)
+            .orElseGet(() -> {                             
+                return new Logic();
+            });
 
-    //     LogicResponse logicResponse = new LogicResponse(
-    //         logic.getId(),
-    //         logic.getRowsNum(),
-    //         logic.getColsNum(),
-    //         logic.getRowHints(),
-    //         logic.getColHints(),
-    //         logic.getSolution(),
-    //         logic.getCreateDate(),
-    //         logic.getGameInfo(),
-    //         logic.getRecords().isEmpty() ? null : logic.getRecords().get(0)
-    //     );
+        LogicDetailResponse logicDetailResponse = new LogicDetailResponse(
+            logic.getId(),
+            logic.getRowsNum(),
+            logic.getColsNum(),
+            logic.getRowHints(),
+            logic.getColHints(),
+            logic.getSolution(),                        
+            logic.getLikes() != null && !logic.getLikes().isEmpty()
+        );
     
-    //     return logicResponse;
-    // }
+        return logicDetailResponse;
+    }
 
     @Override
     public Page<MyLogicResponse> getMyLogic(Pageable pageable) {

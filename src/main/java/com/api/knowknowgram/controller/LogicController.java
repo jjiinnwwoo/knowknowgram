@@ -10,6 +10,7 @@ import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.dto.LogicDto;
 import com.api.knowknowgram.payload.request.LogicRequest;
 import com.api.knowknowgram.payload.request.MyLogicRequest;
+import com.api.knowknowgram.payload.response.LogicDetailResponse;
 import com.api.knowknowgram.payload.response.LogicResponse;
 import com.api.knowknowgram.payload.response.MyLogicResponse;
 import com.api.knowknowgram.payload.response.PaginatedResponse;
@@ -63,14 +64,14 @@ public class LogicController {
         return JsonResponse.data(logicList);
     }
 
-    // @GetMapping("/{id}")
-    // @Operation(summary = "특정 로직 조회", description = "logic id로 특정 문제 조회")
-    // @CommonApiResponses
-    // public JsonResponse getLogicById(@PathVariable Long id) {
-    //     LogicResponse logicList = logicService.getLogicById(id);
+    @GetMapping("/{id}")
+    @Operation(summary = "특정 로직 조회", description = "logic id로 특정 문제 조회")
+    @CommonApiResponses
+    public JsonResponse getLogicById(@PathVariable Long id) {
+        LogicDetailResponse logicList = logicService.getLogicById(id);
 
-    //     return JsonResponse.data(logicList);
-    // }
+        return JsonResponse.data(logicList);
+    }
 
     @GetMapping("/my")
     @Operation(summary = "내 로직 전체 조회", description = "")
