@@ -11,8 +11,9 @@ public class UsersDto {
     private String email;
     private String photo;
     private Integer point;
+    private Integer roleId;
 
-    public UsersDto(Long id, String nickname, String email, String photo, Integer point) {
+    public UsersDto(Long id, String nickname, String email, String photo, Integer point, Integer roleId) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
@@ -26,7 +27,8 @@ public class UsersDto {
             user.getNickname(),
             user.getEmail(),
             user.getPhoto(),
-            user.getPoint()
+            user.getPoint(),
+            user.getRole()
         );
     }
 }

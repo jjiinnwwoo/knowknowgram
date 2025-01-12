@@ -3,10 +3,12 @@ package com.api.knowknowgram.entity;
 import jakarta.persistence.*;
 
 import com.api.knowknowgram.common.base.BaseEntity;
+import com.api.knowknowgram.common.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+@Getter
 @Data
 @Entity
 @Table(name = "users")
@@ -31,6 +34,12 @@ public class Users extends BaseEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = true)
+    private String provider;
+
+    @Column(name = "provider_id", nullable = true)
+    private String providerId;
+
     @JsonIgnore
     @Column(nullable = false)
     private String password;
@@ -40,18 +49,23 @@ public class Users extends BaseEntity implements Serializable {
 
     @Column(nullable = true, columnDefinition = "int default 0")
     private Integer point;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    
+    private Integer role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<UserRecord> records;
 
+    public Users(String email, String provider, String providerId) {
+        this.email = email;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        
         if (o == null || getClass() != o.getClass()) return false;
 
         Users user = (Users) o;
