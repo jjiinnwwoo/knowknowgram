@@ -24,9 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.api.knowknowgram.common.enums.ERole;
-import com.api.knowknowgram.common.exception.NotFoundException;
 import com.api.knowknowgram.common.response.JsonResponse;
-import com.api.knowknowgram.common.response.ResponseCode;
 import com.api.knowknowgram.common.security.JwtUtils;
 import com.api.knowknowgram.common.security.UserDetailsImpl;
 import com.api.knowknowgram.common.util.Helper;
@@ -76,10 +74,10 @@ public class AuthServiceImpl implements AuthService{
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "bdd4b7a4544cdbd8f060cfde4852d26f");
-        body.add("redirect_uri", "http://localhost:8080/api/auth/test/kakao");
+        body.add("redirect_uri", "http://localhost:8080/api/auth/oauth/login");
         body.add("code", code);
         body.add("client_secret", "TBn3JNEEdFATMzV8jbVVJsjFegA1nAAt");
-
+		
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
         RestTemplate rt = new RestTemplate();
@@ -141,11 +139,11 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public ResponseEntity<?> oauthLogin(String code) {
         try {
-            // 카카오에서 Access Token 가져오기
-            String kakaoAccessToken = getAccessTokenByKakao(code);
+            // // 카카오에서 Access Token 가져오기
+            // String kakaoAccessToken = getAccessTokenByKakao(code);
 
             // Access Token으로 카카오 로그인 정보 가져오기
-            JsonNode userDetail = getUserDetailByKakao(kakaoAccessToken);
+            JsonNode userDetail = getUserDetailByKakao(code);
 
             if (userDetail == null || userDetail.isEmpty()) {
                 return ResponseEntity.badRequest()
@@ -165,7 +163,7 @@ public class AuthServiceImpl implements AuthService{
                 newUser.setRoleId(user.getRoleId());
 
                 userDetailsImpl = UserDetailsImpl.build(newUser);
-            } catch (Exception e) {                
+            } catch (Exception e) {
                 // 사용자 없으면 새로 저장
                 Users newUser = new Users();
                 newUser.setEmail(userDetail.get("email").asText());
@@ -183,13 +181,12 @@ public class AuthServiceImpl implements AuthService{
                         .body(JsonResponse.error("카카오 로그인 실패: 이메일 정보를 가져오지 못했습니다."));
             }
             
-            OAuth2User oAuth2User = userDetailsImpl;  // CustomOAuth2User는 OAuth2User를 구현한 클래스
+            OAuth2User oAuth2User = userDetailsImpl;
             Authentication authentication = new OAuth2AuthenticationToken(
                 oAuth2User, 
-                Collections.singletonList(new SimpleGrantedAuthority(ERole.fromCode(userDetailsImpl.getRoleId()).name())),  // 권한 설정
+                Collections.singletonList(new SimpleGrantedAuthority(ERole.fromCode(userDetailsImpl.getRoleId()).name())),
                 userDetailsImpl.getProviderId()
             );
-
             
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -201,15 +198,13 @@ public class AuthServiceImpl implements AuthService{
             
             ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
 
-            // 5. 성공 응답 반환
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                     .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                     .body(JsonResponse.success("로그인 성공"));
         } catch (Exception e) {
-
-            // 6. 에러 로그와 실패 응답 처리
             e.printStackTrace();
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(JsonResponse.error("서버 오류: " + e.getMessage()));
         }   

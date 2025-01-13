@@ -84,22 +84,22 @@ public class AuthController {
                 .body(JsonResponse.success());
     }
 
-    @GetMapping("/test/kakao")
-    @Operation(summary = "인가코드 테스트", description = "")
+    @PostMapping("/oauth/login")
+    @Operation(summary = "oauth 로그인 테스트", description = "")
     @CommonApiResponses
-    public ResponseEntity<?> test(@RequestParam String code) {
+    public ResponseEntity<?> oauthLogin(@RequestParam String code) {
         return authService.oauthLogin(code);
     }
 
-    @GetMapping("/kakao/signin")
-    @Operation(summary = "kakao signin", description = "")
-    @CommonApiResponses
-    public ResponseEntity<?> kakaoSignin(@RequestParam String code) {
-        // authService.kakaoLogin(code);
+    // @GetMapping("/kakao/signin")
+    // @Operation(summary = "kakao signin", description = "")
+    // @CommonApiResponses
+    // public ResponseEntity<?> kakaoSignin(@RequestParam String code) {
+    //     // authService.kakaoLogin(code);
 
-        return ResponseEntity.ok()                
-                .body(JsonResponse.success());        
-    }
+    //     return ResponseEntity.ok()                
+    //             .body(JsonResponse.success());        
+    // }
 
     @PostMapping("/refreshtoken")
     @Operation(summary = "토큰 재발행", description = "")
