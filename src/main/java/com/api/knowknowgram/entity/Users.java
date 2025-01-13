@@ -28,7 +28,7 @@ public class Users extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String nickname;
 
     @Column(nullable = false, unique = true)
@@ -50,17 +50,12 @@ public class Users extends BaseEntity implements Serializable {
     @Column(nullable = true, columnDefinition = "int default 0")
     private Integer point;
     
-    private Integer role;
+    @Column(name = "role_id", nullable = false)
+    private Integer roleId;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<UserRecord> records;
-
-    public Users(String email, String provider, String providerId) {
-        this.email = email;
-        this.provider = provider;
-        this.providerId = providerId;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -86,7 +81,7 @@ public class Users extends BaseEntity implements Serializable {
                 ", email='" + email + '\'' +
                 ", photo='" + photo + '\'' +
                 ", point=" + point +
-                ", role=" + (role != null ? role.toString() : "null") +                
+                ", roleId=" + (roleId != null ? roleId.toString() : "null") +                
                 ", " + super.toString() +
                 '}';
     }

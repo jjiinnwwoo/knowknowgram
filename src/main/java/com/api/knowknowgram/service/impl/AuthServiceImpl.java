@@ -1,10 +1,6 @@
 package com.api.knowknowgram.service.impl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -16,29 +12,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.api.knowknowgram.common.enums.ERole;
 import com.api.knowknowgram.common.exception.NotFoundException;
 import com.api.knowknowgram.common.response.JsonResponse;
 import com.api.knowknowgram.common.response.ResponseCode;
 import com.api.knowknowgram.common.security.JwtUtils;
 import com.api.knowknowgram.common.security.UserDetailsImpl;
-import com.api.knowknowgram.common.security.CustomUserDetails;
 import com.api.knowknowgram.common.util.Helper;
 import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.dto.UsersDto;
 import com.api.knowknowgram.entity.RefreshToken;
 import com.api.knowknowgram.entity.Users;
-import com.api.knowknowgram.payload.response.KakaoResponse;
 import com.api.knowknowgram.repository.UserRepository;
 import com.api.knowknowgram.service.AuthService;
 import com.api.knowknowgram.service.RefreshTokenService;
@@ -49,9 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
-public class AuthServiceImpl implements AuthService{
-    private final UserRepository userRepository;
-
+public class AuthServiceImpl implements AuthService{    
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -66,9 +59,6 @@ public class AuthServiceImpl implements AuthService{
 
     @Autowired
     RefreshTokenService refreshTokenService;
-
-    @Autowired
-    AuthService authService;
 
     @Autowired
     UserService userService;
@@ -150,35 +140,64 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public ResponseEntity<?> oauthLogin(String code) {
-         try {
-            // 1. 카카오에서 Access Token 가져오기
+        try {
+            // 카카오에서 Access Token 가져오기
             String kakaoAccessToken = getAccessTokenByKakao(code);
 
-            // 2. Access Token으로 카카오 로그인 정보 가져오기
-            JsonNode userDetail = authService.getUserDetailByKakao(kakaoAccessToken);
+            // Access Token으로 카카오 로그인 정보 가져오기
+            JsonNode userDetail = getUserDetailByKakao(kakaoAccessToken);
 
             if (userDetail == null || userDetail.isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(JsonResponse.error("카카오 로그인 실패: 이메일 정보를 가져오지 못했습니다."));
             }
+        
+            UserDetailsImpl userDetailsImpl = null;
+            
+            try {                                
+                UsersDto user = userService.getUserByEmail(userDetail.get("email").asText());
+                
+                Users newUser = new Users();
+                newUser.setId(user.getId());
+                newUser.setEmail(user.getEmail());
+                newUser.setProvider(user.getProvider());
+                newUser.setProviderId(user.getProviderId());                
+                newUser.setRoleId(user.getRoleId());
 
-            UsersDto user = userService.getUserByEmail(userDetail.get("email").asText());
+                userDetailsImpl = UserDetailsImpl.build(newUser);
+            } catch (Exception e) {                
+                // 사용자 없으면 새로 저장
+                Users newUser = new Users();
+                newUser.setEmail(userDetail.get("email").asText());
+                newUser.setProvider(userDetail.get("provider").asText());
+                newUser.setProviderId(userDetail.get("provider_id").asText());                
+                newUser.setRoleId(1);
+                
+                userRepository.save(newUser);
+                
+                userDetailsImpl = UserDetailsImpl.build(newUser);
+            }
 
-            if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
+            if (userDetailsImpl == null || userDetailsImpl.getEmail() == null || userDetailsImpl.getEmail().isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(JsonResponse.error("카카오 로그인 실패: 이메일 정보를 가져오지 못했습니다."));
             }
+            
+            OAuth2User oAuth2User = userDetailsImpl;  // CustomOAuth2User는 OAuth2User를 구현한 클래스
+            Authentication authentication = new OAuth2AuthenticationToken(
+                oAuth2User, 
+                Collections.singletonList(new SimpleGrantedAuthority(ERole.fromCode(userDetailsImpl.getRoleId()).name())),  // 권한 설정
+                userDetailsImpl.getProviderId()
+            );
 
-            Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), userDetail.get("provider_id").asText()));
             
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-            
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetailsImpl.getId());
             
             ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
 
@@ -188,6 +207,7 @@ public class AuthServiceImpl implements AuthService{
                     .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                     .body(JsonResponse.success("로그인 성공"));
         } catch (Exception e) {
+
             // 6. 에러 로그와 실패 응답 처리
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

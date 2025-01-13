@@ -7,7 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.api.knowknowgram.entity.Users;
@@ -19,9 +18,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private UserRepository userRepository; // 사용자 정보 저장소
-
-    @Autowired
-    private PasswordEncoder passwordEncoder; // PasswordEncoder 주입
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
