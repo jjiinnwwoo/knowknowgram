@@ -100,6 +100,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Transactional
     public JsonNode getUserDetailByKakao(String kakaoAccessToken) throws JsonProcessingException {
+        Helper.apiLog(LogType.DEV, kakaoAccessToken);
         // 1. RestTemplate 객체 생성
         RestTemplate rt = new RestTemplate();
 
@@ -137,13 +138,13 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public ResponseEntity<?> oauthLogin(String code) {
+    public ResponseEntity<?> oauthLogin(String accessToken) {
         try {
             // // 카카오에서 Access Token 가져오기
             // String kakaoAccessToken = getAccessTokenByKakao(code);
 
             // Access Token으로 카카오 로그인 정보 가져오기
-            JsonNode userDetail = getUserDetailByKakao(code);
+            JsonNode userDetail = getUserDetailByKakao(accessToken);
 
             if (userDetail == null || userDetail.isEmpty()) {
                 return ResponseEntity.badRequest()
