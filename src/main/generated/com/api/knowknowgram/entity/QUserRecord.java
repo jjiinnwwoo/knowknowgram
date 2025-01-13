@@ -62,7 +62,7 @@ public class QUserRecord extends EntityPathBase<UserRecord> {
     public QUserRecord(Class<? extends UserRecord> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.logic = inits.isInitialized("logic") ? new QLogic(forProperty("logic"), inits.get("logic")) : null;
-        this.user = inits.isInitialized("user") ? new QUsers(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUsers(forProperty("user")) : null;
     }
 
 }

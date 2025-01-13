@@ -18,8 +18,6 @@ public class QUsers extends EntityPathBase<Users> {
 
     private static final long serialVersionUID = 294533885L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QUsers users = new QUsers("users");
 
     public final com.api.knowknowgram.common.base.QBaseEntity _super = new com.api.knowknowgram.common.base.QBaseEntity(this);
@@ -42,32 +40,27 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
+    public final StringPath provider = createString("provider");
+
+    public final StringPath providerId = createString("providerId");
+
     public final ListPath<UserRecord, QUserRecord> records = this.<UserRecord, QUserRecord>createList("records", UserRecord.class, QUserRecord.class, PathInits.DIRECT2);
 
-    public final QRole role;
+    public final NumberPath<Integer> roleId = createNumber("roleId", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
 
     public QUsers(String variable) {
-        this(Users.class, forVariable(variable), INITS);
+        super(Users.class, forVariable(variable));
     }
 
     public QUsers(Path<? extends Users> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QUsers(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QUsers(PathMetadata metadata, PathInits inits) {
-        this(Users.class, metadata, inits);
-    }
-
-    public QUsers(Class<? extends Users> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.role = inits.isInitialized("role") ? new QRole(forProperty("role")) : null;
+        super(Users.class, metadata);
     }
 
 }

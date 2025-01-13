@@ -58,7 +58,7 @@ public class QLikes extends EntityPathBase<Likes> {
     public QLikes(Class<? extends Likes> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.logic = inits.isInitialized("logic") ? new QLogic(forProperty("logic"), inits.get("logic")) : null;
-        this.user = inits.isInitialized("user") ? new QUsers(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUsers(forProperty("user")) : null;
     }
 
 }
