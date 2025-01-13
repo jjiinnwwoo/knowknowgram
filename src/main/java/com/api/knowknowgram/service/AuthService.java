@@ -8,5 +8,5 @@ import com.fasterxml.jackson.databind.JsonNode;
 public interface AuthService {    
     String getAccessTokenByKakao(String code) throws JsonProcessingException;
     JsonNode getUserDetailByKakao(String kakaoAccessToken) throws JsonProcessingException;
-    ResponseEntity<?> oauthLogin(String code);
+    ResponseEntity<?> oauthLogin(String accessToken);
 }

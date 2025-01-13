@@ -30,6 +30,7 @@ import com.api.knowknowgram.common.util.Helper;
 import com.api.knowknowgram.common.util.LogType;
 import com.api.knowknowgram.entity.RefreshToken;
 import com.api.knowknowgram.payload.request.LoginRequest;
+import com.api.knowknowgram.payload.request.OauthLoginRequest;
 import com.api.knowknowgram.repository.UserRepository;
 import com.api.knowknowgram.service.AuthService;
 import com.api.knowknowgram.service.RefreshTokenService;
@@ -87,9 +88,16 @@ public class AuthController {
     @PostMapping("/oauth/login")
     @Operation(summary = "oauth 로그인 테스트", description = "")
     @CommonApiResponses
-    public ResponseEntity<?> oauthLogin(@RequestParam String code) {
-        return authService.oauthLogin(code);
+    public ResponseEntity<?> oauthLogin(@RequestBody OauthLoginRequest oauthLoginRequest) {
+        return authService.oauthLogin(oauthLoginRequest.getToken());
     }
+
+    // @GetMapping("/oauth/login")
+    // @Operation(summary = "oauth 로그인 테스트", description = "")
+    // @CommonApiResponses
+    // public ResponseEntity<?> oauthLogin(@RequestParam String code) {
+    //     return authService.oauthLogin(code);
+    // }
 
     // @GetMapping("/kakao/signin")
     // @Operation(summary = "kakao signin", description = "")
