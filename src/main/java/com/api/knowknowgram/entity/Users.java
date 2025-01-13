@@ -3,10 +3,12 @@ package com.api.knowknowgram.entity;
 import jakarta.persistence.*;
 
 import com.api.knowknowgram.common.base.BaseEntity;
+import com.api.knowknowgram.common.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+@Getter
 @Data
 @Entity
 @Table(name = "users")
@@ -25,11 +28,17 @@ public class Users extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String nickname;
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = true)
+    private String provider;
+
+    @Column(name = "provider_id", nullable = true)
+    private String providerId;
 
     @JsonIgnore
     @Column(nullable = false)
@@ -40,10 +49,9 @@ public class Users extends BaseEntity implements Serializable {
 
     @Column(nullable = true, columnDefinition = "int default 0")
     private Integer point;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    
+    @Column(name = "role_id", nullable = false)
+    private Integer roleId;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -52,6 +60,7 @@ public class Users extends BaseEntity implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        
         if (o == null || getClass() != o.getClass()) return false;
 
         Users user = (Users) o;
@@ -72,7 +81,7 @@ public class Users extends BaseEntity implements Serializable {
                 ", email='" + email + '\'' +
                 ", photo='" + photo + '\'' +
                 ", point=" + point +
-                ", role=" + (role != null ? role.toString() : "null") +                
+                ", roleId=" + (roleId != null ? roleId.toString() : "null") +                
                 ", " + super.toString() +
                 '}';
     }

@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.api.knowknowgram.common.security.AuthEntryPointJwt;
 import com.api.knowknowgram.common.security.AuthTokenFilter;
+import com.api.knowknowgram.common.security.CustomAuthenticationProvider;
 
 @Configuration
 @EnableMethodSecurity
@@ -26,6 +27,9 @@ public class WebSecurityConfig {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
+    @Autowired
+    private CustomAuthenticationProvider customAuthenticationProvider;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -65,6 +69,7 @@ public class WebSecurityConfig {
             );
             
         http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(customAuthenticationProvider);
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         
